@@ -2,7 +2,7 @@ using UnityEngine;
 
 public class RotateCamera : MonoBehaviour
 {
-    [SerializeField] private float _speed;
+    [SerializeField] private float _speedRotate;
     
     private Transform _rotator;
 
@@ -13,6 +13,6 @@ public class RotateCamera : MonoBehaviour
 
     private void FixedUpdate()
     {
-        _rotator.Rotate(0, _speed * Time.fixedDeltaTime, 0);
+        _rotator.Rotate(0, _speedRotate * Time.fixedDeltaTime, 0);
     }
 }
