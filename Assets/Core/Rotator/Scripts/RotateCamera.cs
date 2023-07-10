@@ -1,18 +1,21 @@
 using UnityEngine;
 
-public class RotateCamera : MonoBehaviour
+namespace Core.Rotator
 {
-    [SerializeField] private float _speedRotate;
-    
-    private Transform _rotator;
-
-    private void Awake()
+    public class RotateCamera : MonoBehaviour
     {
-        _rotator = GetComponent<Transform>();
-    }
+        [SerializeField] private float _speedRotate;
 
-    private void FixedUpdate()
-    {
-        _rotator.Rotate(0, _speedRotate * Time.fixedDeltaTime, 0);
+        private Transform _rotator;
+
+        private void Awake()
+        {
+            _rotator = GetComponent<Transform>();
+        }
+
+        private void FixedUpdate()
+        {
+            _rotator.Rotate(0, _speedRotate * Time.fixedDeltaTime, 0);
+        }
     }
 }
