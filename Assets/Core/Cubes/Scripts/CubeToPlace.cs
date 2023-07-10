@@ -46,7 +46,7 @@ namespace Core.Cubes
             {
                 Vector3 checkingPosition = cubePosition + _lastCubePosition;
 
-                bool isFreePosition = IsPositionEmpty(checkingPosition);
+                bool isFreePosition = IsObjectAtPosition(checkingPosition);
 
                 if (isFreePosition)
                 {
@@ -69,15 +69,15 @@ namespace Core.Cubes
             }
         }
 
-        //bool IsObjectAtPosition(Vector3 localPosition)
-        //{
-        //    Vector3 globalPosition = transform.TransformPoint(localPosition);
-        //    Vector3 halfExtents = new Vector3(0.5f, 0.5f, 0.5f); // средняя точка куба, так как куб имеет размеры 1х1х1
+        bool IsObjectAtPosition(Vector3 localPosition)
+        {
+            Vector3 globalPosition = transform.TransformPoint(localPosition);
+            Vector3 halfExtents = new Vector3(0.5f, 0.5f, 0.5f); // средняя точка куба, так как куб имеет размеры 1х1х1
 
-        //    Collider[] colliders = Physics.OverlapBox(globalPosition, halfExtents);
+            Collider[] colliders = Physics.OverlapBox(globalPosition, halfExtents);
 
-        //    return colliders.Length > 0; // Возвращает true, если найдены коллайдеры на заданной позиции
-        //}
+            return colliders.Length > 0; // Возвращает true, если найдены коллайдеры на заданной позиции
+        }
 
         private bool IsPositionEmpty(Vector3 targetPos)
         {
@@ -86,7 +86,6 @@ namespace Core.Cubes
 
             foreach (Vector3 pos in _cubePositions)
             {
-                //if ((pos.x == targetPos.x) && (pos.y == targetPos.y) && (pos.z == targetPos.z))
                 if (pos.Equals(targetPos))
                 {
                     return false;
