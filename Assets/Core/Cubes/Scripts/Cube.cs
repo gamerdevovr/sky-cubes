@@ -7,18 +7,19 @@ namespace Core.Cubes
     {
          public Vector3 Size => new Vector3(1, 1, 1);
 
-         private ExplodeCubes _explodeCubes;
+         private VirtualHorizont _virtualHorizont;
 
         private void Start()
         {
-            _explodeCubes = GameObject.Find("Horizont").GetComponent<ExplodeCubes>();
+            // Повільний метод пошуку об"єкта на сцені, але як по іншому отримати посилання на об"єкт на сцені, якщо скрипт висить на префабі?
+            _virtualHorizont = GameObject.Find("VirtualHorizont").GetComponent<VirtualHorizont>();
             
-            _explodeCubes.ExplodeEvent += StartDestroy;
+            _virtualHorizont.ExplodeEvent += StartDestroy;
         }
 
         private void OnDestroy()
         {
-            _explodeCubes.ExplodeEvent -= StartDestroy; 
+            _virtualHorizont.ExplodeEvent -= StartDestroy; 
         }
 
         private void StartDestroy()

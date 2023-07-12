@@ -13,7 +13,7 @@ namespace Core.Camera
         private Transform _camTransform;
         private Vector3 _originPos;
 
-        private ExplodeCubes _explodeCubes;
+        private VirtualHorizont _virtualHorizont;
 
         private void Awake()
         {
@@ -22,23 +22,20 @@ namespace Core.Camera
 
         private void Start()
         {
-            _explodeCubes = GameObject.Find("Horizont").GetComponent<ExplodeCubes>();
+            _virtualHorizont = GameObject.Find("VirtualHorizont").GetComponent<VirtualHorizont>();
 
-            _explodeCubes.ExplodeEvent += Shake;
+            _virtualHorizont.ExplodeEvent += Shake;
         }
 
         private void OnDestroy()
         {
-            _explodeCubes.ExplodeEvent -= Shake;
+            _virtualHorizont.ExplodeEvent -= Shake;
         }
 
         private void Shake()
         {
-            Debug.Log("Shake");
-
             transform.localPosition -= new Vector3(0, 0, _distanceMovingCamera);
             _originPos = _camTransform.localPosition;
-
 
             StartCoroutine(ShakeCoroutine());
         }
@@ -46,7 +43,6 @@ namespace Core.Camera
         private IEnumerator ShakeCoroutine()
         {
             bool isShake = true;
-            //int i = 1;
 
             while (isShake)
             {
@@ -61,7 +57,6 @@ namespace Core.Camera
                     _camTransform.localPosition = _originPos;
                     isShake = false;
                 }
-                //Debug.Log(i++);
             }
 
             yield return true;

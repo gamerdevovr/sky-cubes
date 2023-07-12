@@ -1,7 +1,7 @@
 using System;
 using UnityEngine;
 
-public class ExplodeCubes : MonoBehaviour
+public class VirtualHorizont : MonoBehaviour
 {
     public event Action ExplodeEvent;
 
@@ -26,13 +26,10 @@ public class ExplodeCubes : MonoBehaviour
             cube.GetComponent<Rigidbody>().AddExplosionForce(_explosionForce, _explosionPosition, _explosionRadius);
         }
 
-        Vector3 contactPoint = collision.contacts[0].point;
-        Vector3 pointInstantiateExplode = new Vector3(contactPoint.x, contactPoint.y, contactPoint.z);
+        Vector3 pointInstantiateExplode = collision.contacts[0].point;
 
         GameObject newExplosion = Instantiate(_explosion, pointInstantiateExplode, Quaternion.identity);
         Destroy(newExplosion, 2.5f);
-
-        Destroy(collision.gameObject);
 
         transform.localScale = _scaleAfterExplosion;
 

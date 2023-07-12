@@ -8,12 +8,8 @@ namespace Core.Cubes
     {
         [SerializeField] private float _speedChangePlace;
 
-        private CubePositions _cubePositions;
-        private List<Vector3> _validPositions;
-        private Vector3 _lastCubePosition = new Vector3(0, 1, 0);
-
-
-        private List<Vector3> _variantPositionCubeToPlace = new List<Vector3>
+        private readonly Vector3 _halfExtents = new Vector3(0.5f, 0.5f, 0.5f);
+        private readonly List<Vector3> _variantPositionCubeToPlace = new List<Vector3>
         {
             new Vector3(0, 1, 0),
             new Vector3(0, -1, 0),
@@ -23,76 +19,50 @@ namespace Core.Cubes
             new Vector3(0, 0, -1)
         };
 
-        private void Awake()
-        {
-            _cubePositions = new CubePositions();
-            _validPositions = new List<Vector3>();
-        }
+        private Vector3 _lastCubePosition = new Vector3(0, 0, 0);
+        private List<Vector3> _validPositions = new List<Vector3>();
 
         private void Start()
         {
-            GetValidPositions();
+            ValidPositions();
             StartCoroutine(CubePos());
         }
 
-        private void Update()
-        {
-
-        }
-
-        private void GetValidPositions()
+        private void ValidPositions()
         {
             foreach (Vector3 cubePosition in _variantPositionCubeToPlace)
             {
                 Vector3 checkingPosition = cubePosition + _lastCubePosition;
+                //Vector3 globalPosition = transform.TransformPoint(checkingPosition);
 
-                bool isFreePosition = IsObjectAtPosition(checkingPosition);
+                bool isOccupiedPosition = Physics.CheckBox(checkingPosition, _halfExtents);
 
-                if (isFreePosition)
+                Debug.Log(cubePosition + " = " + checkingPosition + " = " + checkingPosition);
+
+                if (!isOccupiedPosition)
                 {
-                    _validPositions.Add(cubePosition);
+                    _validPositions.Add(checkingPosition);
                 }
+            }
+
+            foreach (Vector3 pos in _validPositions)
+            {
+                Debug.Log(pos);
             }
         }
 
-        IEnumerator CubePos()
+        private IEnumerator CubePos()
         {
             while (true)
             {
-                foreach (Vector3 cubePosition in _validPositions)
-                {
-                    transform.position = _lastCubePosition;
-                    transform.position = transform.TransformPoint(cubePosition);
+                yield return new WaitForSeconds(_speedChangePlace);
 
-                    yield return new WaitForSeconds(_speedChangePlace);
-                }
+                int randomIndex = Random.Range(0, _validPositions.Count);
+                //Debug.Log(_validPositions.Count);
+
+                transform.position = _lastCubePosition;
+                transform.position = transform.TransformPoint(_validPositions[randomIndex]);
             }
-        }
-
-        bool IsObjectAtPosition(Vector3 localPosition)
-        {
-            Vector3 globalPosition = transform.TransformPoint(localPosition);
-            Vector3 halfExtents = new Vector3(0.5f, 0.5f, 0.5f); // средняя точка куба, так как куб имеет размеры 1х1х1
-
-            Collider[] colliders = Physics.OverlapBox(globalPosition, halfExtents);
-
-            return colliders.Length > 0; // Возвращает true, если найдены коллайдеры на заданной позиции
-        }
-
-        private bool IsPositionEmpty(Vector3 targetPos)
-        {
-            if (targetPos.y == 0)
-                return false;
-
-            foreach (Vector3 pos in _cubePositions)
-            {
-                if (pos.Equals(targetPos))
-                {
-                    return false;
-                }
-            }
-
-            return true;
         }
     }
 }
