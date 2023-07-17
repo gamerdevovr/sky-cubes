@@ -1,0 +1,65 @@
+{
+    "name": "InputControls",
+    "maps": [
+        {
+            "name": "TapToSceen",
+            "id": "e7a443bd-3271-4f0e-a8d7-055ebb7f1ee8",
+            "actions": [
+                {
+                    "name": "TapToScreen",
+                    "type": "Button",
+                    "id": "e1fff8a5-173c-42c9-a6e5-e78ceaccfd94",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                },
+                {
+                    "name": "MouseRghtButton",
+                    "type": "Button",
+                    "id": "ca93d4bc-35a8-4045-95dc-0a1a7118f5b1",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                }
+            ],
+            "bindings": [
+                {
+                    "name": "",
+                    "id": "4acca385-6979-4845-b9b6-39206d203c30",
+                    "path": "<Touchscreen>/Press",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "TapToScreen",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "e8902d4f-2e1e-499e-82df-ffd7b39278db",
+                    "path": "<Mouse>/leftButton",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "TapToScreen",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "8e9334d2-9f61-4771-85fd-36fae5103671",
+                    "path": "<Mouse>/rightButton",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "MouseRghtButton",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                }
+            ]
+        }
+    ],
+    "controlSchemes": []
+}

@@ -5,8 +5,6 @@ namespace Core.Cubes
 {
     public class Cube : MonoBehaviour
     {
-         public Vector3 Size => new Vector3(1, 1, 1);
-
          private VirtualHorizont _virtualHorizont;
 
         private void Start()
@@ -17,15 +15,9 @@ namespace Core.Cubes
             _virtualHorizont.ExplodeEvent += StartDestroy;
         }
 
-        private void OnDestroy()
-        {
-            _virtualHorizont.ExplodeEvent -= StartDestroy; 
-        }
+        private void OnDestroy() => _virtualHorizont.ExplodeEvent -= StartDestroy; 
 
-        private void StartDestroy()
-        {
-            StartCoroutine(DestroyCube());
-        }
+        private void StartDestroy() => StartCoroutine(DestroyCube());
 
         private IEnumerator DestroyCube()
         {

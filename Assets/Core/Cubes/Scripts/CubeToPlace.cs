@@ -1,14 +1,16 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 namespace Core.Cubes
 {
     public class CubeToPlace : MonoBehaviour
     {
+        [SerializeField] private AllCubes _allCubes;
+        [SerializeField] private GameObject[] _cubes;
         [SerializeField] private float _speedChangePlace;
 
-        private readonly Vector3 _halfExtents = new Vector3(0.5f, 0.5f, 0.5f);
         private readonly List<Vector3> _variantPositionCubeToPlace = new List<Vector3>
         {
             new Vector3(0, 1, 0),
@@ -19,50 +21,68 @@ namespace Core.Cubes
             new Vector3(0, 0, -1)
         };
 
-        private Vector3 _lastCubePosition = new Vector3(0, 0, 0);
-        private List<Vector3> _validPositions = new List<Vector3>();
+        private InputManager _inputManager => InputManager.Instance;
+        private List<Vector3> _validPositions;
+        private Transform _lastCube;
+        private int randomIndex;
 
         private void Start()
         {
+            _lastCube = GameObject.Find("MainCube").transform;
+
+            _inputManager.ClickToScreenEvent += ClickHandler;
+
+            // TODO: Після тестів видалити
+            _inputManager.ClickRightEvent += Right;
+
             ValidPositions();
             StartCoroutine(CubePos());
         }
 
-        private void ValidPositions()
+        private void OnDestroy() => _inputManager.ClickToScreenEvent -= ClickHandler;
+ 
+        private void ValidPositions() => _validPositions =  _variantPositionCubeToPlace.Except(_allCubes.AllPositionsCubes).ToList();
+      
+        private void ClickHandler()
         {
-            foreach (Vector3 cubePosition in _variantPositionCubeToPlace)
-            {
-                Vector3 checkingPosition = cubePosition + _lastCubePosition;
-                //Vector3 globalPosition = transform.TransformPoint(checkingPosition);
 
-                bool isOccupiedPosition = Physics.CheckBox(checkingPosition, _halfExtents);
+            _allCubes.AllPositionsCubes.Add(_validPositions[randomIndex]);
 
-                Debug.Log(cubePosition + " = " + checkingPosition + " = " + checkingPosition);
+            GameObject newCube = Instantiate(_cubes[0], _validPositions[randomIndex], Quaternion.identity);
+            newCube.transform.SetParent(_allCubes.transform);
+            newCube.name = "MainCube";
 
-                if (!isOccupiedPosition)
-                {
-                    _validPositions.Add(checkingPosition);
-                }
-            }
+            _lastCube.name = "Cube";
+            _lastCube = newCube.transform;
 
-            foreach (Vector3 pos in _validPositions)
-            {
-                Debug.Log(pos);
-            }
+            ValidPositions();
         }
 
         private IEnumerator CubePos()
         {
+            int previousIndex = -1;
+
             while (true)
             {
                 yield return new WaitForSeconds(_speedChangePlace);
 
-                int randomIndex = Random.Range(0, _validPositions.Count);
-                //Debug.Log(_validPositions.Count);
+                do
+                {
+                    randomIndex = Random.Range(0, _validPositions.Count);
+                } while (randomIndex == previousIndex);
 
-                transform.position = _lastCubePosition;
+                previousIndex = randomIndex;
+
+                transform.position = _lastCube.position;
                 transform.position = transform.TransformPoint(_validPositions[randomIndex]);
             }
+        }
+
+        // TODO: Після тестів видалити
+        private void Right()
+        {
+            foreach(Vector3 pos in _validPositions)
+                Debug.Log(pos);
         }
     }
 }
